@@ -2,10 +2,23 @@ import argparse
 import os
 import imageio
 import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
 
 def combine_images(image_paths, output_folder=None, width=960, height=540):
     img_left = imageio.imread(os.path.expanduser(image_paths[0]))
     img_right = imageio.imread(os.path.expanduser(image_paths[1]))
+    img_left = cv2.resize(img_left, (int(width/2), int(height)))
+    img_right = cv2.resize(img_right, (int(width/2), int(height)))
+
+    output_img = np.hstack((img_left, img_right))
+
+    if output_folder:
+        imageio.imwrite(os.path.expanduser(os.path.join(output_folder, "sign.jpg")), output_img)
+    else:
+        plt.imshow(output_img)
+        input()
 
     print("Hello world")
 
