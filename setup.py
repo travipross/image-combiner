@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="beer_sign_creator",
+    name="image_combiner",
     packages=find_packages(),
     install_requires=[
         "opencv-python",
@@ -11,7 +11,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            'create-sign=beer_sign_creator.create_sign:main'
+            'combine-images=image_combiner.combine_images:main'
         ]
     }
 )
