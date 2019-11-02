@@ -1,3 +1,3 @@
-# Beer Sign Creator
+# Image Combiner
 
-Simply stitches images together for digital photo frame
+Simply stitches images together. Originally designed with a digital photo frame / beer menu in mind.
