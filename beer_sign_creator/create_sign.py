@@ -15,7 +15,18 @@ def combine_images(image_paths, output_folder=None, width=960, height=540):
     output_img = np.hstack((img_left, img_right))
 
     if output_folder:
-        output_path = os.path.expanduser(os.path.join(output_folder, "beer_sign.jpg"))
+        output_folder = os.path.expanduser(output_folder)
+        filename = "beer_sign"
+        ext = ".jpg"
+        if not os.path.exists(output_folder):
+            os.makedirs(output_folder)
+
+        output_path = os.path.join(output_folder, filename+ext)
+        n = "1"
+        while os.path.isfile(output_path):
+            output_path = os.path.join(output_folder, filename+n+ext)
+            n = str(int(n)+1)
+
         imageio.imwrite(output_path, output_img)
         print("Output written to %s" % output_path)
     else:
