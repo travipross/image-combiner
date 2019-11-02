@@ -25,11 +25,16 @@ def combine_images(image_paths, output_folder=None, width=960, height=540):
         except FileNotFoundError:
             print("Error loading %s... Skipping." % image_path)
 
+    # Exit if no images successfully loaded
+    if not len(imgs):
+        print("Could not load any of the specified images.. exiting")
+        exit(1)
+
     # Resize the images to the proper portion of the final resolution
     imgs = [cv2.resize(img, (int(width/len(imgs)), int(height))) for img in imgs]
 
     # Combine the images side-by-side
-    output_img = np.hstack(imgs)
+    output_img = np.hstack(imgs) if len(imgs) > 1 else imgs.pop()
 
     # If output directory was specified, generate the necessary parent directories and a filename
     if output_folder:
