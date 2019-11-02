@@ -18,15 +18,18 @@ def combine_images(image_paths, output_folder=None, width=960, height=540):
     """
 
     # Load the images as numpy arrays
-    img_left = imageio.imread(os.path.expanduser(image_paths[0]))
-    img_right = imageio.imread(os.path.expanduser(image_paths[1]))
+    imgs = []
+    for image_path in image_paths:
+        try:
+            imgs.append(imageio.imread(os.path.expanduser(image_path)))
+        except FileNotFoundError:
+            print("Error loading %s... Skipping." % image_path)
 
     # Resize the images to the proper portion of the final resolution
-    img_left = cv2.resize(img_left, (int(width/2), int(height)))
-    img_right = cv2.resize(img_right, (int(width/2), int(height)))
+    imgs = [cv2.resize(img, (int(width/len(imgs)), int(height))) for img in imgs]
 
     # Combine the images side-by-side
-    output_img = np.hstack((img_left, img_right))
+    output_img = np.hstack(imgs)
 
     # If output directory was specified, generate the necessary parent directories and a filename
     if output_folder:
@@ -68,7 +71,7 @@ def combine_images(image_paths, output_folder=None, width=960, height=540):
 def main():
     parser = argparse.ArgumentParser("Combine two images")
     parser.add_argument("image_paths",
-                        nargs=2,
+                        nargs="+",
                         type=str,
                         help="Two paths of images to combine")
     parser.add_argument("-o", "--output_folder",
