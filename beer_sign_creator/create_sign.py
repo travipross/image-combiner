@@ -7,28 +7,50 @@ import matplotlib.pyplot as plt
 
 
 def combine_images(image_paths, output_folder=None, width=960, height=540):
+    """
+    Combines two images side-by-side at a given final resolution.
+    :param image_paths: Iterable containing at least two image paths
+    :param output_folder: (Optional) Which directory in which to save the resulting image. If omitted, the image will
+            simply be displayed
+    :param width: Width in pixels of final image
+    :param height: Height in pixels of final image
+    :return:
+    """
+
+    # Load the images as numpy arrays
     img_left = imageio.imread(os.path.expanduser(image_paths[0]))
     img_right = imageio.imread(os.path.expanduser(image_paths[1]))
+
+    # Resize the images to the proper portion of the final resolution
     img_left = cv2.resize(img_left, (int(width/2), int(height)))
     img_right = cv2.resize(img_right, (int(width/2), int(height)))
 
+    # Combine the images side-by-side
     output_img = np.hstack((img_left, img_right))
 
+    # If output directory was specified, generate the necessary parent directories and a filename
     if output_folder:
+        # if the output folder does not exist, create it (and any parent directories)
         output_folder = os.path.expanduser(output_folder)
-        filename = "beer_sign"
-        ext = ".jpg"
         if not os.path.exists(output_folder):
             os.makedirs(output_folder)
 
+        # Build a full path including file name
+        filename = "beer_sign"
+        ext = ".jpg"
         output_path = os.path.join(output_folder, filename+ext)
+
+        # If file already exists in the specified location, increment an integer suffix until a unique name is found
         n = "1"
         while os.path.isfile(output_path):
             output_path = os.path.join(output_folder, filename+n+ext)
             n = str(int(n)+1)
 
+        # Save the image
         imageio.imwrite(output_path, output_img)
         print("Output written to %s" % output_path)
+
+    # If no directory was specified, simply display the image
     else:
         plt.imshow(output_img)
         plt.show()
