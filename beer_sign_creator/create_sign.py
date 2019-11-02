@@ -30,15 +30,24 @@ def combine_images(image_paths, output_folder=None, width=960, height=540):
 
     # If output directory was specified, generate the necessary parent directories and a filename
     if output_folder:
-        # if the output folder does not exist, create it (and any parent directories)
         output_folder = os.path.expanduser(output_folder)
-        if not os.path.exists(output_folder):
-            os.makedirs(output_folder)
 
-        # Build a full path including file name
-        filename = "beer_sign"
-        ext = ".jpg"
-        output_path = os.path.join(output_folder, filename+ext)
+        # if specified path has an extension, assume it's a full file path
+        if os.path.splitext(output_folder)[1] != "":
+            output_path = output_folder
+            output_folder, basename = os.path.split(output_path)
+            filename, ext = os.path.splitext(basename)
+
+        # Otherwise, assume a folder was specified
+        else:
+            # if the output folder does not exist, create it (and any parent directories)
+            if not os.path.exists(output_folder):
+                os.makedirs(output_folder)
+
+            # Build a full path including file name
+            filename = "beer_sign"
+            ext = ".jpg"
+            output_path = os.path.join(output_folder, filename+ext)
 
         # If file already exists in the specified location, increment an integer suffix until a unique name is found
         n = "1"
