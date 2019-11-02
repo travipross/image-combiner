@@ -15,12 +15,12 @@ def combine_images(image_paths, output_folder=None, width=960, height=540):
     output_img = np.hstack((img_left, img_right))
 
     if output_folder:
-        imageio.imwrite(os.path.expanduser(os.path.join(output_folder, "sign.jpg")), output_img)
+        output_path = os.path.expanduser(os.path.join(output_folder, "beer_sign.jpg"))
+        imageio.imwrite(output_path, output_img)
+        print("Output written to %s" % output_path)
     else:
         plt.imshow(output_img)
-        input()
-
-    print("Hello world")
+        plt.show()
 
 
 def main():

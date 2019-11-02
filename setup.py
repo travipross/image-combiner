@@ -5,7 +5,9 @@ setup(
     packages=find_packages(),
     install_requires=[
         "opencv-python",
-        "imageio"
+        "imageio",
+        "numpy",
+        "matplotlib"
     ],
     entry_points={
         "console_scripts": [
