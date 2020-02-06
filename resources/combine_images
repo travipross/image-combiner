@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ -z $VENV_IMAGE_COMBINER ]; then
+   echo "Environment variable \$VENV_IMAGE_COMBINER not found. Please log out and log back in, or retry installation steps"
+   exit 1
+fi
+source $VENV_IMAGE_COMBINER/bin/activate
+
+combine-images $@
