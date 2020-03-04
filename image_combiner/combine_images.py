@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def combine_images(image_paths, output_folder=None, width=960, height=540):
+def combine_images(image_paths, output_folder=None, width=1024, height=600):
     """
     Combines two images side-by-side at a given final resolution.
     :param image_paths: Iterable containing at least two image paths
