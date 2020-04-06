@@ -84,12 +84,12 @@ def main():
                         default=None,
                         required=False)
     parser.add_argument("-W", "--width",
-                        default=960,
+                        default=1024,
                         required=False,
                         type=int,
                         help="Width of output image")
     parser.add_argument("-H", "--height",
-                        default=540,
+                        default=600,
                         required=False,
                         type=int,
                         help="Height of output image")
