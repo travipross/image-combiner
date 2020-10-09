@@ -1,4 +1,9 @@
-from photo_library import ALBUM_ID_ARCHIVE, ALBUM_ID_MAIN, ALBUM_ID_HOME
+from photo_library import (
+    ALBUM_ID_ARCHIVE,
+    ALBUM_ID_MAIN,
+    ALBUM_ID_HOME,
+    ALBUM_ID_ORIGINALS,
+)
 from collections.abc import Iterable
 from gphotospy import authorize
 from gphotospy.media import Media
@@ -78,6 +83,7 @@ def upload_photos_to_album(
 
     # stage/upload anonymous data from filepath
     for f in filepaths:
+        logger.info(f"Uploading {f}")
         media_mgr.stage_media(os.path.expanduser(f))
 
     # If no album specified, create new album
@@ -89,6 +95,20 @@ def upload_photos_to_album(
     meta_list = media_mgr.batchCreate(album_id=album_id)
 
     return meta_list
+
+
+def upload_originals(service, filepath):
+    # if filepath is a folder, find all files
+    filepath = os.path.expanduser(filepath)
+    if os.path.isdir(filepath):
+        filepaths = [os.path.join(filepath, f) for f in os.listdir(filepath)]
+    elif os.path.isfile(filepath):
+        filepaths = [filepath]
+    else:
+        raise FileNotFoundError(f"Invalid filepath: {filepath}")
+
+    logger.info(f"Files to upload: {len(filepaths)}")
+    upload_photos_to_album(service, filepaths=filepaths, album_id=ALBUM_ID_ORIGINALS)
 
 
 if __name__ == "__main__":
