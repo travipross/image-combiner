@@ -1,9 +1,10 @@
-from image_uploader import ALBUM_ID_ARCHIVE, ALBUM_ID_MAIN, ALBUM_ID_HOME
+from photo_library import ALBUM_ID_ARCHIVE, ALBUM_ID_MAIN, ALBUM_ID_HOME
 from collections.abc import Iterable
 from gphotospy import authorize
 from gphotospy.media import Media
 from gphotospy.album import Album
 
+import os
 import logging
 
 # logging.basicConfig(level=logging.DEBUG)
@@ -77,7 +78,7 @@ def upload_photos_to_album(
 
     # stage/upload anonymous data from filepath
     for f in filepaths:
-        media_mgr.stage_media(f)
+        media_mgr.stage_media(os.path.expanduser(f))
 
     # If no album specified, create new album
     if album_id is None:
@@ -91,15 +92,4 @@ def upload_photos_to_album(
 
 
 if __name__ == "__main__":
-    SECRET_FILE = "/home/travipross/Downloads/client_secret_67452508625-13uu1amgknrnn5kc4ki5436nlklklbag.apps.googleusercontent.com.json"
-    service = authorize.init(SECRET_FILE)
-    logger.warning("TEst")
-    logger.error("TEST")
-    # set_menu(
-    #     service, None, filepath="/home/travipross/Desktop/cream-ale_lemon-water.jpg"
-    # )
-    set_home(
-        service,
-        photo_id=None,
-        filepath="/home/travipross/Downloads/Prosserpub-halloween.jpg",
-    )
+    service = authorize.init()
