@@ -27,5 +27,6 @@ echo -e "---------------------------\n\n"
 
 # Copying executables to /usr/local/bin
 echo "Copying executable to make 'combine_images' command available anywhere for $USER"
+#TODO: install other command line scripts
 sudo install resources/combine_images /usr/local/bin
 echo "Installation complete. You may need to log out and log back in for changes to take effect"
