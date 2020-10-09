@@ -3,15 +3,8 @@ from setuptools import setup, find_packages
 setup(
     name="image_combiner",
     packages=find_packages(),
-    install_requires=[
-        "opencv-python",
-        "imageio",
-        "numpy",
-        "matplotlib"
-    ],
+    install_requires=["opencv-python", "imageio", "numpy", "matplotlib", "gphotospy"],
     entry_points={
-        "console_scripts": [
-            'combine-images=image_combiner.combine_images:main'
-        ]
-    }
+        "console_scripts": ["combine-images=image_combiner.combine_images:main"]
+    },
 )
