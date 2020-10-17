@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tempfile
 from photo_library.fn.download import download_photo_by_id
+from photo_library.fn.upload import set_menu
 from gphotospy import authorize
 
 # TODO: Implement gphotospy to combine images from cloud
@@ -34,12 +35,12 @@ def combine_images(
     imgs = []
     for image_path in image_paths:
         if fetch_cloud:
-            print("Downloading images from Google Photos by id")
+            image_id = image_path
+            print(f"Downloading images from Google Photos by id: {image_id}")
             with tempfile.TemporaryDirectory() as tmpdir:
                 downloaded_img = download_photo_by_id(
-                    service, image_path, download_dir=tmpdir
+                    service, image_id, download_dir=tmpdir
                 )
-                # basename_no_ext = os.path.splitext(os.path.basename(downloaded_img))[0]
                 imgs.append(imageio.imread(downloaded_img))
         else:
             try:
@@ -94,6 +95,17 @@ def combine_images(
         plt.imshow(output_img)
         plt.show()
 
+    if upload_menu or input("Would you like to set this menu? (y/n): ") == "y":
+        filename = input("Provide a filename for this menu: ")
+        if not filename.endswith(".jpg"):
+            filename += ".jpg"
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            menu_fullpath = os.path.join(tmpdir, filename)
+            imageio.imwrite(menu_fullpath, output_img)
+            print(f"Uploading menu: {menu_fullpath}")
+            set_menu(service, filepath=menu_fullpath)
+
 
 def main():
     parser = argparse.ArgumentParser("Combine two images")
@@ -130,6 +142,11 @@ def main():
         "--fetch-cloud",
         action="store_true",
         help="Assume image paths are cloud photo IDs to download",
+    )
+    parser.add_argument(
+        "--upload-menu",
+        action="store_true",
+        help="Upload menu to cloud after creating",
     )
 
     args = vars(parser.parse_args())
