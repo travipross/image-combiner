@@ -4,10 +4,21 @@ import imageio
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
+import tempfile
+from photo_library.fn.download import download_photo_by_id
+from gphotospy import authorize
 
 # TODO: Implement gphotospy to combine images from cloud
 # TODO: Implement image preview for stitching
-def combine_images(image_paths, output_folder=None, width=1024, height=600):
+def combine_images(
+    image_paths,
+    output_folder=None,
+    width=1024,
+    height=600,
+    fetch_cloud=False,
+    upload_menu=False,
+    service=None,
+):
     """
     Combines two images side-by-side at a given final resolution.
     :param image_paths: Iterable containing at least two image paths
@@ -15,16 +26,26 @@ def combine_images(image_paths, output_folder=None, width=1024, height=600):
             simply be displayed
     :param width: Width in pixels of final image
     :param height: Height in pixels of final image
+    :param fetch_cloud: Whether to fetch images from cloud
     :return:
     """
 
     # Load the images as numpy arrays
     imgs = []
     for image_path in image_paths:
-        try:
-            imgs.append(imageio.imread(os.path.expanduser(image_path)))
-        except FileNotFoundError:
-            print("Error loading %s... Skipping." % image_path)
+        if fetch_cloud:
+            print("Downloading images from Google Photos by id")
+            with tempfile.TemporaryDirectory() as tmpdir:
+                downloaded_img = download_photo_by_id(
+                    service, image_path, download_dir=tmpdir
+                )
+                # basename_no_ext = os.path.splitext(os.path.basename(downloaded_img))[0]
+                imgs.append(imageio.imread(downloaded_img))
+        else:
+            try:
+                imgs.append(imageio.imread(os.path.expanduser(image_path)))
+            except FileNotFoundError:
+                print("Error loading %s... Skipping." % image_path)
 
     # Exit if no images successfully loaded
     if not len(imgs):
@@ -98,8 +119,26 @@ def main():
         type=int,
         help="Height of output image",
     )
+    parser.add_argument(
+        "--credentials-file",
+        type=str,
+        required=False,
+        help="Path to JSON credentials file",
+        default=os.environ.get("GOOGLE_PHOTOS_CREDS"),
+    )
+    parser.add_argument(
+        "--fetch-cloud",
+        action="store_true",
+        help="Assume image paths are cloud photo IDs to download",
+    )
 
     args = vars(parser.parse_args())
+    service = (
+        authorize.init(args["credentials_file"]) if "credentials_file" in args else None
+    )
+    args.update({"service": service})
+    del args["credentials_file"]
+
     combine_images(**args)
 
 
