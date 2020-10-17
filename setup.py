@@ -13,6 +13,7 @@ setup(
             "list-originals=photo_library.cmd.utils:list_originals",
             "list-menus=photo_library.cmd.utils:list_archived_menus",
             "list-albums=photo_library.cmd.utils:list_albums",
+            "download-photo=photo_library.cmd.download:download_photo_by_id",
         ]
     },
 )
