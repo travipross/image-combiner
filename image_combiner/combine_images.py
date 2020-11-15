@@ -96,7 +96,7 @@ def combine_images(
         plt.show()
 
     if upload_menu or input("Would you like to set this menu? (y/n): ") == "y":
-        filename = input("Provide a filename for this menu: ")
+        filename = input("Provide a filename for this menu: ") or "default-filename"
         if not filename.endswith(".jpg"):
             filename += ".jpg"
 
